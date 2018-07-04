@@ -207,10 +207,11 @@ module Caracal
     end
 
     def render_footer(zip)
-      content = ::Caracal::Renderers::FooterRenderer.render(self)
+      # content = ::Caracal::Renderers::FooterRenderer.render(self)
 
-      zip.put_next_entry('word/footer1.xml')
-      zip.write(content)
+      # zip.put_next_entry('word/footer1.xml')
+      # zip.write(content)
+      zip.add('word/footer1.xml', File.join('/', 'footer2.xml'))
     end
 
     def render_header(zip)
