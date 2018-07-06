@@ -295,45 +295,111 @@ module Caracal
       end
 
       def render_pagenumber(xml, model)
-        xml['w'].ftr root_options do
-          xml['w'].p paragraph_options do
-            xml['w'].pPr do
-              xml['w'].contextualSpacing({ 'w:val' => '0' })
-              xml['w'].jc({ 'w:val' => "#{ model.page_number_align }" })
-            end
-            unless model.page_number_label.nil?
-              xml['w'].r run_options do
-                xml['w'].rPr do
-                  xml['w'].rStyle({ 'w:val' => 'PageNumber' })
-                  unless model.page_number_label_size.nil?
-                    xml['w'].sz({ 'w:val' => model.page_number_label_size })
-                  end
-                end
-                xml['w'].t({ 'xml:space' => 'preserve' }) do
-                  xml.text "#{ model.page_number_label } "
-                end
-              end
-            end
-            xml['w'].r run_options do
-              xml['w'].rPr do
-                unless model.page_number_number_size.nil?
-                  xml['w'].sz({ 'w:val' => model.page_number_number_size })
-                  xml['w'].szCs({ 'w:val' => model.page_number_number_size })
-                end
-              end
-              xml['w'].fldChar({ 'w:fldCharType' => 'begin' })
-              xml['w'].instrText({ 'xml:space' => 'preserve' }) do
-                xml.text 'PAGE'
-              end
-              xml['w'].fldChar({ 'w:fldCharType' => 'end' })
-            end
-            xml['w'].r run_options do
-              xml['w'].rPr do
-                xml['w'].rtl({ 'w:val' => '0' })
-              end
+        xml['w'].p paragraph_options do
+          xml['w'].r do
+            xml['w'].fldChar({ 'w:fldCharType' => 'begin' })
+          end
+          xml['w'].r do
+            xml['w'].instrText do
+              xml.text 'PAGE'
             end
           end
+          xml['w'].r do
+            xml['w'].fldChar({ 'w:fldCharType' => 'separate' })
+          end
+          xml['w'].r do
+            xml['w'].fldChar({ 'w:fldCharType' => 'end' })
+          end
+          xml['w'].r do
+            xml.text '/'
+          end
+          xml['w'].r do
+            xml['w'].instrText do
+              xml.text 'NUMPAGES'
+            end
+          end
+          xml['w'].r do
+            xml['w'].fldChar({ 'w:fldCharType' => 'separate' })
+          end
+          xml['w'].r do
+            xml['w'].fldChar({ 'w:fldCharType' => 'end' })
+          end
+          # xml['w'].r do
+          #   xml['w'].rPr do
+          #     xml['w'].noProof
+          #   end
+          #   xml.text
+          # end
         end
+        # '
+        #   <w:pPr>
+        #     <w:pStyle w:val="a3"/>
+        #   </w:pPr>
+        #   <w:r>
+        #     <w:rPr>
+        #       <w:noProof/>
+        #     </w:rPr>
+        #     <w:t>1</w:t>
+        #   </w:r>
+        #
+        #   <w:r>
+        #     <w:fldChar w:fldCharType="begin"/>
+        #   </w:r>
+        #   <w:r>
+        #     <w:instrText>NUMPAGES</w:instrText>
+        #   </w:r>
+        #   <w:r>
+        #     <w:fldChar w:fldCharType="separate"/>
+        #   </w:r>
+        #   <w:r>
+        #     <w:rPr>
+        #       <w:noProof/>
+        #     </w:rPr>
+        #     <w:t>1</w:t>
+        #   </w:r>
+        #   <w:r>
+        #     <w:fldChar w:fldCharType="end"/>
+        #   </w:r>
+        # </w:p>'
+        # xml['w'].ftr root_options do
+        #   xml['w'].p paragraph_options do
+        #     xml['w'].pPr do
+        #       xml['w'].contextualSpacing({ 'w:val' => '0' })
+        #       xml['w'].jc({ 'w:val' => "#{ model.page_number_align }" })
+        #     end
+        #     unless model.page_number_label.nil?
+        #       xml['w'].r run_options do
+        #         xml['w'].rPr do
+        #           xml['w'].rStyle({ 'w:val' => 'PageNumber' })
+        #           unless model.page_number_label_size.nil?
+        #             xml['w'].sz({ 'w:val' => model.page_number_label_size })
+        #           end
+        #         end
+        #         xml['w'].t({ 'xml:space' => 'preserve' }) do
+        #           xml.text "#{ model.page_number_label } "
+        #         end
+        #       end
+        #     end
+        #     xml['w'].r run_options do
+        #       xml['w'].rPr do
+        #         unless model.page_number_number_size.nil?
+        #           xml['w'].sz({ 'w:val' => model.page_number_number_size })
+        #           xml['w'].szCs({ 'w:val' => model.page_number_number_size })
+        #         end
+        #       end
+        #       xml['w'].fldChar({ 'w:fldCharType' => 'begin' })
+        #       xml['w'].instrText({ 'xml:space' => 'preserve' }) do
+        #         xml.text 'PAGE'
+        #       end
+        #       xml['w'].fldChar({ 'w:fldCharType' => 'end' })
+        #     end
+        #     xml['w'].r run_options do
+        #       xml['w'].rPr do
+        #         xml['w'].rtl({ 'w:val' => '0' })
+        #       end
+        #     end
+        #   end
+        # end
       end
 
       def render_table(xml, model)
