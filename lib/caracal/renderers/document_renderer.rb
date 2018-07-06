@@ -36,7 +36,7 @@ module Caracal
                     xml['w'].footerReference({ 'r:id' => rel.formatted_id, 'w:type' => 'default' })
                   end
                 end
-                if document.header_show 
+                if document.header_show
                   if rel = document.find_relationship('header1.xml')
                     xml['w'].headerReference({ 'r:id' => rel.formatted_id, 'w:type' => 'default' })
                   end
@@ -291,6 +291,48 @@ module Caracal
         xml['w'].r run_options do
           render_run_attributes(xml, model, false)
           xml['w'].t({ 'xml:space' => 'preserve' }, model.text_content)
+        end
+      end
+
+      def render_pagenumber(xml, model)
+        xml['w'].ftr root_options do
+          xml['w'].p paragraph_options do
+            xml['w'].pPr do
+              xml['w'].contextualSpacing({ 'w:val' => '0' })
+              xml['w'].jc({ 'w:val' => "#{ model.page_number_align }" })
+            end
+            unless model.page_number_label.nil?
+              xml['w'].r run_options do
+                xml['w'].rPr do
+                  xml['w'].rStyle({ 'w:val' => 'PageNumber' })
+                  unless model.page_number_label_size.nil?
+                    xml['w'].sz({ 'w:val' => model.page_number_label_size })
+                  end
+                end
+                xml['w'].t({ 'xml:space' => 'preserve' }) do
+                  xml.text "#{ model.page_number_label } "
+                end
+              end
+            end
+            xml['w'].r run_options do
+              xml['w'].rPr do
+                unless model.page_number_number_size.nil?
+                  xml['w'].sz({ 'w:val' => model.page_number_number_size })
+                  xml['w'].szCs({ 'w:val' => model.page_number_number_size })
+                end
+              end
+              xml['w'].fldChar({ 'w:fldCharType' => 'begin' })
+              xml['w'].instrText({ 'xml:space' => 'preserve' }) do
+                xml.text 'PAGE'
+              end
+              xml['w'].fldChar({ 'w:fldCharType' => 'end' })
+            end
+            xml['w'].r run_options do
+              xml['w'].rPr do
+                xml['w'].rtl({ 'w:val' => '0' })
+              end
+            end
+          end
         end
       end
 
