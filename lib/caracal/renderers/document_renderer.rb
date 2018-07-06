@@ -311,7 +311,9 @@ module Caracal
             xml['w'].fldChar({ 'w:fldCharType' => 'end' })
           end
           xml['w'].r do
-            xml.text '/'
+            xml['w'].t do
+              xml.text '/'
+            end
           end
           xml['w'].r do
             xml['w'].instrText do
