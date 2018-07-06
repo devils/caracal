@@ -316,6 +316,9 @@ module Caracal
             end
           end
           xml['w'].r do
+            xml['w'].fldChar({ 'w:fldCharType' => 'begin' })
+          end
+          xml['w'].r do
             xml['w'].instrText do
               xml.text 'NUMPAGES'
             end
