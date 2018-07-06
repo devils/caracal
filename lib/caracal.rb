@@ -37,6 +37,7 @@ Caracal::Core::Models::TableCellModel.class_eval do
   include Caracal::Core::Rules
   include Caracal::Core::Tables
   include Caracal::Core::Text
+  include Caracal::Core::PageNumbers
 end
 
 Caracal::Core::Models::HeaderModel.class_eval do
