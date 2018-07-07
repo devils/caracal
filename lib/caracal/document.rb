@@ -105,7 +105,7 @@ module Caracal
 
       page_size
       page_margins top: 1440, bottom: 1440, left: 1440, right: 1440
-      page_numbers
+      # page_numbers
 
       [:font, :list_style, :namespace, :relationship, :style].each do |method|
         collection = self.class.send("default_#{ method }s")
