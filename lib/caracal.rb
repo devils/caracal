@@ -48,3 +48,12 @@ Caracal::Core::Models::HeaderModel.class_eval do
   include Caracal::Core::Text
   include Caracal::Core::PageNumbers
 end
+
+Caracal::Core::Models::FooterModel.class_eval do
+  include Caracal::Core::Images
+  include Caracal::Core::Lists
+  include Caracal::Core::Rules
+  include Caracal::Core::Tables
+  include Caracal::Core::Text
+  include Caracal::Core::PageNumbers
+end
