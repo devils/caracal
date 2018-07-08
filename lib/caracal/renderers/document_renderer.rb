@@ -31,7 +31,7 @@ module Caracal
               #============= PAGE SETTINGS ==============================
 
               xml['w'].sectPr do
-                if document.page_number_show
+                if document.footer_show
                   if rel = document.find_relationship('footer1.xml')
                     xml['w'].footerReference({ 'r:id' => rel.formatted_id, 'w:type' => 'default' })
                   end

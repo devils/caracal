@@ -13,6 +13,7 @@ require 'caracal/core/namespaces'
 require 'caracal/core/page_breaks'
 require 'caracal/core/page_numbers'
 require 'caracal/core/headers'
+require 'caracal/core/footers'
 require 'caracal/core/page_settings'
 require 'caracal/core/relationships'
 require 'caracal/core/rules'
@@ -55,6 +56,7 @@ module Caracal
     include Caracal::Core::Styles
     include Caracal::Core::ListStyles
     include Caracal::Core::Headers
+    include Caracal::Core::Footers
 
     include Caracal::Core::IFrames
     include Caracal::Core::Images
@@ -207,8 +209,8 @@ module Caracal
     end
 
     def render_footer(zip)
-      # content = ::Caracal::Renderers::FooterRenderer.render(self)
-      content = s = File.open('./footer2.xml', 'rb') { |f| f.read }
+      content = ::Caracal::Renderers::FooterRenderer.render(self)
+      # content = s = File.open('./footer2.xml', 'rb') { |f| f.read }
       zip.put_next_entry('word/footer1.xml')
       zip.write(content)
     end
