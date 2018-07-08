@@ -41,9 +41,11 @@ module Caracal
       def to_xml
         builder = ::Nokogiri::XML::Builder.with(declaration_xml) do |xml|
           xml['w'].hdr root_options do
-            document.header_contents.each do |m|
-              method = render_method_for_model(m)
-              send(method, xml, m)
+            unless document.footer_contents.nil?
+              document.header_contents.each do |m|
+                method = render_method_for_model(m)
+                send(method, xml, m)
+              end
             end
           end
         end
