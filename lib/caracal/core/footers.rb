@@ -44,10 +44,10 @@ module Caracal
 
             model = Caracal::Core::Models::FooterModel.new(options, &block)
             if model.valid?
-              @header_show     = model.footer_show
+              @footer_show     = model.footer_show
               @header_contents = model.contents
             else
-              @header_show = false
+              @footer_show = false
             end
             model
           end
