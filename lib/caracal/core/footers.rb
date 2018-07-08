@@ -23,7 +23,7 @@ module Caracal
             @footer_relationships ||= []
           end
 
-          def footer_relationships(relationships)
+          def footer_relationships=(relationships)
             @footer_relationships = relationships
           end
 
