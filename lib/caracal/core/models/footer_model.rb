@@ -23,7 +23,7 @@ module Caracal
 
         # initialization
         def initialize(options={}, &block)
-          @header_show   = DEFAULT_FOOTER_SHOW
+          @footer_show   = DEFAULT_FOOTER_SHOW
 
           if content = options.delete(:content)
             p content, options.dup, &block
@@ -47,7 +47,7 @@ module Caracal
         #=============== SETTERS ==============================
 
         def show(value)
-          @header_show = !!value
+          @footer_show = !!value
         end
 
         #=============== SETTERS ==============================
@@ -62,7 +62,7 @@ module Caracal
         #=============== VALIDATION ===========================
 
         def valid?
-          header_show
+          footer_show
         end
 
 
