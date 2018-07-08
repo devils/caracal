@@ -5,7 +5,7 @@ require 'caracal/renderers/xml_renderer'
 
 module Caracal
   module Renderers
-    class FooterRenderer < XmlRenderer
+    class FooterRenderer < DocumentRenderer
 
       # :nodoc:
       class DocumentDecorator < SimpleDelegator
