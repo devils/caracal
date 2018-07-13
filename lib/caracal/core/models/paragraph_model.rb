@@ -52,7 +52,6 @@ module Caracal
             color:      paragraph_color,
             size:       paragraph_size,
             bold:       paragraph_bold,
-            keep_lines: paragraph_keep_lines,
             italic:     paragraph_italic,
             underline:  paragraph_underline,
             bgcolor:    paragraph_bgcolor
@@ -63,7 +62,7 @@ module Caracal
         #=============== SETTERS ==============================
 
         # booleans
-        [:bold, :italic, :underline, :keep_lines].each do |m|
+        [:bold, :italic, :underline].each do |m|
           define_method "#{ m }" do |value|
             instance_variable_set("@paragraph_#{ m }", !!value)
           end
@@ -150,7 +149,7 @@ module Caracal
         private
 
         def option_keys
-          [:content, :style, :align, :color, :size, :bold, :italic, :underline, :bgcolor, :keep_lines]
+          [:content, :style, :align, :color, :size, :bold, :italic, :underline, :bgcolor]
         end
 
       end
