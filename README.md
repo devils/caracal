@@ -405,15 +405,16 @@ docx.p 'Sample text.'
 docx.p 'Sample text.', style: 'custom_style'
 
 docx.p 'Sample text.' do
-  style          'custom_style'    # sets the paragraph style. generally used at the exclusion of other attributes.
-  align          :left             # sets the alignment. accepts :left, :center, :right, and :both.
-  color          '333333'          # sets the font color.
-  size           32                # sets the font size. units in 1/2 points.
-  bold           true              # sets whether or not to render the text with a bold weight.
-  italic         false             # sets whether or not render the text in italic style.
-  underline      false             # sets whether or not to underline the text.
-  bgcolor        'cccccc'          # sets the background color.
-  vertical_align 'superscript'     # sets the vertical alignment.
+  style           'custom_style'    # sets the paragraph style. generally used at the exclusion of other attributes.
+  align           :left             # sets the alignment. accepts :left, :center, :right, and :both.
+  color           '333333'          # sets the font color.
+  size            32                # sets the font size. units in 1/2 points.
+  bold            true              # sets whether or not to render the text with a bold weight.
+  italic          false             # sets whether or not render the text in italic style.
+  underline       false             # sets whether or not to underline the text.
+  bgcolor         'cccccc'          # sets the background color.
+  highlight_color 'yellow'          # sets the highlight color. only accepts OOXML enumerations. see http://www.datypic.com/sc/ooxml/t-w_ST_HighlightColor.html.
+  vertical_align  'superscript'     # sets the vertical alignment.
 end
 ```
 
@@ -436,21 +437,48 @@ end
 
 Links can be added inside paragraphs using the `link` method.  The method accepts several optional parameters for controlling the style and behavior of the rule.
 
-*At present, all links are assumed to be external.*
-
 ```ruby
 p do
   link 'Example Text', 'https://wwww.example.com' do
-    font       'Courier New'  # sets the font name to use. defaults to nil.
-    color       '0000ff'      # sets the color of the text. defaults to 1155cc.
-    size        24            # sets the font size. units in half-points. defaults to nil.
-    bold        false         # sets whether or not the text will be bold. defaults to false.
-    italic      false         # sets whether or not the text will be italic. defaults to false.
-    underline   true          # sets whether or not the text will be underlined. defaults to true.
-    bgcolor     'cccccc'      # sets the background color.
+    internal        false             # sets whether or not the link references an external url. defaults to false.
+    font            'Courier New'     # sets the font name to use. defaults to nil.
+    color           '0000ff'          # sets the color of the text. defaults to 1155cc.
+    size            24                # sets the font size. units in half-points. defaults to nil.
+    bold            false             # sets whether or not the text will be bold. defaults to false.
+    italic          false             # sets whether or not the text will be italic. defaults to false.
+    underline       true              # sets whether or not the text will be underlined. defaults to true.
+    bgcolor         'cccccc'          # sets the background color.
+    highlight_color 'yellow'          # sets the highlight color. only accepts OOXML enumerations. see http://www.datypic.com/sc/ooxml/t-w_ST_HighlightColor.html.
   end
 end
 ```
+
+
+### Bookmarks
+
+Bookmarks can be added directly to the document or inside paragraph blocks using the `bookmark_start` and `bookmark_end`
+methods. Bookmarks can be inserted at the document-level to describe section headings, etc. or inside
+of a paragraph block for fine-grained linking.
+
+```ruby
+# document-level bookmark
+dox.bookmark_start id: 's1', name: 'section1'
+docx.h2 'Section Heading'
+docx.bookmark_end id: 's1'
+docx.p  'Section content.'
+
+# pargraph-level bookmark
+docx.h2 'Section Heading'
+docx.p do
+  text 'Pretend this paragraph has a lot of text and we want to bookmark '
+  bookmark_start id: 'p1', name: 'phrase1'
+  text 'a single phrase'
+  bookmark_end id: 'p1'
+  text ' inside the larger block.'
+end
+```
+
+Bookmarks work in conjunction with internal links.  Please see above.
 
 
 ### Headings
@@ -600,6 +628,10 @@ the simplest solution to both problems.*
 
 ### Tables
 
+```
+Release v1.4.0 deprecated the behaviour of automatically adding an empty paragraph tag after every table. If you are upgrading from an older version of the library, you will need to control such spacing in your own code.
+```
+
 Tables can be added using the `table` method.  The method accepts several optional paramters to control the layout and style of the table cells.
 
 The `table` command accepts data in the form of a two-dimensional arrays. This corresponds to rows and column cells within those rows.  Each array item can be a string, a Hash of options, a Proc (which will be passed as a block), or a `TableCellModel`.  The command will normalize all array contents into a two-dimensional array of `TableCellModel` instances.
@@ -643,9 +675,9 @@ It is possible to merge cells vertically and horizontally using the `rowspan` an
 
 ```ruby
 docx.table [['11', '1213', '14'], ['21', '22', '23', '24']] do
-  cell_style rows[0][0], rowspan: 2 
-  cell_style rows[0][1], colspan: 2 
-  cell_style rows[0][2], rowspan: 2 
+  cell_style rows[0][0], rowspan: 2
+  cell_style rows[0][1], colspan: 2
+  cell_style rows[0][2], rowspan: 2
 end
 ```
 
@@ -659,10 +691,10 @@ If your table contains more complex data (multiple paragraphs, images, lists, et
 c1 = Caracal::Core::Models::TableCellModel.new do
   background 'cccccc'    # sets the background color. defaults to 'ffffff'.
   margins do
-    top                  # sets the top margin. defaults to 0. units in twips.
-    bottom               # sets the bottom margin. defaults to 0. units in twips.
-    left                 # sets the left margin. defaults to 0. units in twips.
-    right                # sets the right margin. defaults to 0. units in twips.
+    top                  # sets the top margin. defaults to 100. units in twips.
+    bottom               # sets the bottom margin. defaults to 100. units in twips.
+    left                 # sets the left margin. defaults to 100. units in twips.
+    right                # sets the right margin. defaults to 100. units in twips.
   end
 
   p 'This is a sentence above an image.'

@@ -87,6 +87,7 @@ module Caracal
                 xml['w'].i(         { 'w:val'  => (attrs[:italic] ? '1' : '0') })             unless attrs[:italic].nil?
                 xml['w'].u(         { 'w:val'  => (attrs[:underline] ? 'single' : 'none') })  unless attrs[:underline].nil?
                 xml['w'].shd(       { 'w:fill' => attrs[:bgcolor], 'w:val' => 'clear' })      unless attrs[:bgcolor].nil?
+                xml['w'].highlight( { 'w:val' => attrs[:highlight_color] })                   unless attrs[:highlight_color].nil?
                 xml['w'].vertAlign( { 'w:val' => attrs[:vertical_align] })                    unless attrs[:vertical_align].nil?
                 unless attrs[:font].nil?
                   f = attrs[:font]
@@ -101,6 +102,14 @@ module Caracal
 
 
       #============= MODEL RENDERERS ===========================
+
+      def render_bookmark(xml, model)
+        if model.start?
+          xml['w'].bookmarkStart({ 'w:id' => model.bookmark_id, 'w:name' => model.bookmark_name })
+        else
+          xml['w'].bookmarkEnd({ 'w:id' => model.bookmark_id })
+        end
+      end
 
       def render_iframe(xml, model)
         ::Zip::File.open(model.file) do |zip|
@@ -200,9 +209,14 @@ module Caracal
       end
 
       def render_link(xml, model)
-        rel = document.relationship({ target: model.link_href, type: :link })
+        if model.external?
+          rel = document.relationship({ target: model.link_href, type: :link })
+          hyperlink_options = { 'r:id' => rel.formatted_id }
+        else
+          hyperlink_options = { 'w:anchor' => model.link_href }
+        end
 
-        xml['w'].hyperlink({ 'r:id' => rel.formatted_id }) do
+        xml['w'].hyperlink(hyperlink_options) do
           xml['w'].r run_options do
             render_run_attributes(xml, model, false)
             xml['w'].t({ 'xml:space' => 'preserve' }, model.link_content)
@@ -504,10 +518,6 @@ module Caracal
             rowspan_hash = adjusted_rowspan_hash
           end
         end
-
-        # don't know why this is needed, but it prevents a
-        # rendering error.
-        render_paragraph(xml, Caracal::Core::Models::ParagraphModel.new)
       end
 
 
@@ -523,23 +533,6 @@ module Caracal
           opts['mc:Ignorable'] = v
         end
         opts
-        # {
-        #   'xmlns:mc'   => 'http://schemas.openxmlformats.org/markup-compatibility/2006',
-        #   'xmlns:o'    => 'urn:schemas-microsoft-com:office:office',
-        #   'xmlns:r'    => 'http://schemas.openxmlformats.org/officeDocument/2006/relationships',
-        #   'xmlns:m'    => 'http://schemas.openxmlformats.org/officeDocument/2006/math',
-        #   'xmlns:v'    => 'urn:schemas-microsoft-com:vml',
-        #   'xmlns:wp'   => 'http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing',
-        #   'xmlns:w10'  => 'urn:schemas-microsoft-com:office:word',
-        #   'xmlns:w'    => 'http://schemas.openxmlformats.org/wordprocessingml/2006/main',
-        #   'xmlns:wne'  => 'http://schemas.microsoft.com/office/word/2006/wordml',
-        #   'xmlns:sl'   => 'http://schemas.openxmlformats.org/schemaLibrary/2006/main',
-        #   'xmlns:a'    => 'http://schemas.openxmlformats.org/drawingml/2006/main',
-        #   'xmlns:pic'  => 'http://schemas.openxmlformats.org/drawingml/2006/picture',
-        #   'xmlns:c'    => 'http://schemas.openxmlformats.org/drawingml/2006/chart',
-        #   'xmlns:lc'   => 'http://schemas.openxmlformats.org/drawingml/2006/lockedCanvas',
-        #   'xmlns:dgm'  => 'http://schemas.openxmlformats.org/drawingml/2006/diagram'
-        # }
       end
 
       def page_margin_options
